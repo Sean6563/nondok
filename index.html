@@ -295,9 +295,67 @@ function 안내(){
        동선도 마찬가지다. 5택1은 정답 맞히기가 아니라 <b>지금 내 판단을 적어 두는
        것</b>이다. 적어 둬야 나중에 선생님 것과 견줄 수 있다. 갈린 자리에서
        <b>내 쪽이 맞는 것 같다</b>고 눌러도 된다 — 그건 선생님에게 간다.</div>
-     <button class="go" onclick="안내봤다()">알겠다 — 시작하기</button>
+     ${서버?'':'<button class="go" onclick="안내봤다()">알겠다 — 시작하기</button>'}
    </div>
+   ${서버?`<div class="card gd">
+     <h2>열쇠 한 번만 적어 두자</h2>
+     <div class="lead">선생님께 받은 <b>열쇠</b>를 적으면, <b>폰에서 풀던 걸
+       노트북에서 이어서</b> 할 수 있다. 안 적어도 쓸 수 있지만 그때는
+       기록이 <b>이 기기에만</b> 남는다. 나중에 적어도 된다 —
+       <b>내 기록</b>에서 언제든 바꿀 수 있다.</div>
+     <input class="ta" id="첫열쇠칸" value="${esc(내열쇠)}" placeholder="예: 은찬-4718"
+       style="height:auto;padding:11px 12px;margin-top:10px"
+       oninput="첫열쇠침(this.value)" onkeydown="if(event.key==='Enter')열쇠맞나()">
+     <div class="note" id="첫열쇠말" style="border:0;padding:7px 0 0"></div>
+     <button class="go" onclick="열쇠맞나()">시작하기</button>
+     <a class="more" onclick="안내봤다()">열쇠 없이 시작하기</a>
+   </div>`:''}
    <button class="ghost" onclick="목록()">← 목록</button>`;
+}
+
+// ── 열쇠를 맞게 적었나 ───────────────────────────────────────────────────
+// ⚠️ 이게 없으면 **오타를 조용히 삼킨다.** 기록을 올리는 길(POST)은 답을 못
+//    읽어서(`no-cors`), 명단에 없는 열쇠여도 화면엔 「보냈다」라고 뜬다.
+//    학생은 한참 풀고 나서야 아무것도 안 올라간 걸 알게 된다.
+//    받기(JSONP)는 답을 읽을 수 있으므로 **그 길로 물어본다.**
+let 첫열쇠='';
+function 첫열쇠침(v){ 첫열쇠=String(v||'').trim(); 첫말(''); }
+function 첫말(글, 나쁨){
+  const t=$('#첫열쇠말'); if(!t) return;
+  t.textContent=글; t.style.color = 나쁨 ? '#a8503f' : '#5c626d';
+}
+// 목록에서 이을 때는 **안내로 안 넘어간다** — 보던 자리에 그대로 있어야 한다.
+function 목록열쇠(){ 열쇠맞나(true); }
+
+function 열쇠맞나(목록에서){
+  const 끝내기 = 목록에서 ? (()=>{ 목록(); 위로(); }) : 안내봤다;
+  const k=(첫열쇠||내열쇠||'').trim();
+  if(!k){ 첫말('열쇠를 안 적으면 이 기기에만 남는다. 그래도 괜찮으면 아래를 눌러라.'); return; }
+  첫말('확인하는 중…');
+  const 이름='lrchk'+(++부름번호);
+  const s=document.createElement('script');
+  const 치우기=()=>{ try{ delete window[이름]; }catch(e){ window[이름]=undefined; }
+                    if(s.parentNode) s.parentNode.removeChild(s); };
+  const 시계=setTimeout(()=>{ 치우기();
+    // 서버에 못 닿는 것과 열쇠가 틀린 것은 다르다. 못 닿았으면 **막지 않는다** —
+    // 열쇠는 맞는데 지금 인터넷이 나쁜 것일 수 있고, 그때 학생을 세우면 안 된다.
+    열쇠적기(k); 첫말('지금은 서버에 못 닿았다. 그냥 시작한다 — 나중에 저절로 이어진다.');
+    setTimeout(끝내기, 1600); }, 12000);
+  window[이름]=(d)=>{
+    clearTimeout(시계); 치우기();
+    if(d && d.됨 && d.쓸수있나===false){
+      첫말('그런 열쇠가 없다. 선생님께 받은 대로 다시 적어 보자.', true); return;
+    }
+    열쇠적기(k);
+    첫말('이어졌다. 시작한다.');
+    setTimeout(끝내기, 700);
+  };
+  s.onerror=()=>{ clearTimeout(시계); 치우기();
+    열쇠적기(k); 첫말('지금은 서버에 못 닿았다. 그냥 시작한다.');
+    setTimeout(끝내기, 1600); };
+  s.src=서버+(서버.indexOf('?')<0?'?':'&')
+        +'do=get&cb='+이름+'&key='+encodeURIComponent(k);
+  document.body.appendChild(s);
 }
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 // onclick="…('${값}')" 처럼 **작은따옴표 안에 끼는** 값 전용. esc() 로는 못 막는다 —
@@ -604,6 +662,18 @@ function 목록(){
    // 안내는 한 번 보면 안 뜬다. 다시 열 자리를 목록 맨 위에 남겨 둔다 —
    // 동선 다섯 낱말은 한 번 읽고 외워지는 말이 아니다.
    +'<a class="more" onclick="안내()">사용법 다시 보기</a></div>'
+   // 열쇠 없이 시작한 학생은 안내를 다시 안 본다. 그러면 **기록이 이 기기에만
+   // 쌓이는 줄 모른 채** 몇 주가 간다. 목록 맨 위에 한 줄로 남겨 둔다.
+   +((서버&&!내열쇠)?`<div class="card" style="padding:12px 14px;margin-bottom:12px">
+      <b>열쇠를 아직 안 적었다</b>
+      <div class="note" style="border:0;padding:4px 0 8px">지금은 기록이
+        <b>이 기기에만</b> 남는다. 선생님께 받은 열쇠를 적으면 폰·노트북·패드가
+        같은 기록으로 이어진다.</div>
+      <input class="ta" id="목록열쇠칸" placeholder="예: 은찬-4718"
+        style="height:auto;padding:11px 12px" oninput="첫열쇠침(this.value)"
+        onkeydown="if(event.key==='Enter')목록열쇠()">
+      <div class="note" id="첫열쇠말" style="border:0;padding:7px 0 0"></div>
+      <button class="ghost" onclick="목록열쇠()">잇기</button></div>`:'')
    // ── 갈래로 걸러 온 상태 ──────────────────────────────────────────────
    // 대조 화면에서 「같은 갈래 보기」를 눌러 들어오면 목록이 확 줄어 있다. 걸러 놓은
    // 줄 모르면 「자료가 이것뿐인가」로 읽힌다 — 무엇으로 걸렀는지 밝히고 **지울 길**을
