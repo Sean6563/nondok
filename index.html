@@ -303,7 +303,7 @@ function 안내(){
        노트북에서 이어서</b> 할 수 있다. 안 적어도 쓸 수 있지만 그때는
        기록이 <b>이 기기에만</b> 남는다. 나중에 적어도 된다 —
        <b>내 기록</b>에서 언제든 바꿀 수 있다.</div>
-     <input class="ta" id="첫열쇠칸" value="${esc(내열쇠)}" placeholder="예: 은찬"
+     <input class="ta" id="첫열쇠칸" value="${esc(내열쇠)}" placeholder="예: 홍길동"
        style="height:auto;padding:11px 12px;margin-top:10px"
        oninput="첫열쇠침(this.value)" onkeydown="if(event.key==='Enter')열쇠맞나()">
      <div class="note" id="첫열쇠말" style="border:0;padding:7px 0 0"></div>
@@ -669,7 +669,7 @@ function 목록(){
       <div class="note" style="border:0;padding:4px 0 8px">지금은 기록이
         <b>이 기기에만</b> 남는다. 선생님께 받은 열쇠를 적으면 폰·노트북·패드가
         같은 기록으로 이어진다.</div>
-      <input class="ta" id="목록열쇠칸" placeholder="예: 은찬"
+      <input class="ta" id="목록열쇠칸" placeholder="예: 홍길동"
         style="height:auto;padding:11px 12px" oninput="첫열쇠침(this.value)"
         onkeydown="if(event.key==='Enter')목록열쇠()">
       <div class="note" id="첫열쇠말" style="border:0;padding:7px 0 0"></div>
@@ -1189,13 +1189,13 @@ function 모아보기(){
     <div class="card"><b>내 이름</b>
       <div class="note" style="border:0;padding:4px 0 8px">보낸 기록이 누구 건지
         선생님이 알아보시게 한 줄 적어 두세요. 안 적어도 쓰는 데는 지장 없습니다.</div>
-      <input class="ta" id="이름칸" value="${esc(내이름)}" placeholder="예: 은찬"
+      <input class="ta" id="이름칸" value="${esc(내이름)}" placeholder="예: 홍길동"
         style="height:auto;padding:9px 12px" oninput="이름적기(this.value)"></div>
     ${서버?`<div class="card"><b>다른 기기와 잇기</b>
       <div class="note" style="border:0;padding:4px 0 8px">선생님께 받은 <b>열쇠</b>를
         적으면 폰·노트북·패드에서 <b>같은 기록</b>으로 이어집니다. 비밀번호가 아니라
         이름표입니다. 안 적어도 이 기기에서는 그대로 쓸 수 있습니다.</div>
-      <input class="ta" id="열쇠칸" value="${esc(내열쇠)}" placeholder="예: 은찬"
+      <input class="ta" id="열쇠칸" value="${esc(내열쇠)}" placeholder="예: 홍길동"
         style="height:auto;padding:9px 12px" oninput="열쇠적기(this.value)">
       <div class="note" id="이음" style="border:0;padding:7px 0 0">${esc(이음말[이음상태]||'')}</div>
       ${내열쇠?`<button class="ghost" onclick="받아오기(true)">지금 가져오기</button>`:''}
