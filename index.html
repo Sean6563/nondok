@@ -405,8 +405,9 @@ function 들일까(k){
   const t=$('#첫열쇠말'); if(!t) return;
   t.insertAdjacentHTML('afterend',
     `<div id="들이기칸" style="margin-top:8px">
-       <button class="ghost" onclick="들이기()">${esc(k)} 로 시작하기</button>
-       <a class="more" onclick="첫말('');$('#들이기칸')&&$('#들이기칸').remove()">다시 적기</a>
+       <button class="go" onclick="첫말('');$('#들이기칸').remove();
+         (document.querySelector('#첫열쇠칸')||{focus(){}}).focus()">다시 적기</button>
+       <a class="more" onclick="들이기()">아니다, 이 이름이 맞다 — 그대로 시작</a>
      </div>`);
 }
 function 들이기(){
@@ -417,22 +418,22 @@ function 들이기(){
   const s=document.createElement('script');
   const 치우기=()=>{ try{ delete window[이름]; }catch(e){ window[이름]=undefined; }
                     if(s.parentNode) s.parentNode.removeChild(s); };
-  const 시계=setTimeout(()=>{ 치우기(); 첫말('지금은 서버에 못 닿았다. 잠시 뒤 다시.', true);
+  const 시계=setTimeout(()=>{ 치우기(); 첫말('지금은 서버에 못 닿았습니다. 잠시 뒤 다시 해 주세요.', true);
                              들일까(k); }, 12000);
   window[이름]=(d)=>{
     clearTimeout(시계); 치우기();
     if(d && d.찼나){
-      첫말('자리가 다 찼다. 선생님께 말해 주세요.', true); return;
+      첫말('자리가 다 찼습니다. 선생님께 말씀해 주세요.', true); return;
     }
     if(!d || !d.됨){
-      첫말('못 들어갔다. 잠시 뒤 다시 해 보자.', true); 들일까(k); return;
+      첫말('못 들어갔습니다. 잠시 뒤 다시 해 주세요.', true); 들일까(k); return;
     }
     열쇠적기(k);
-    첫말('들어왔다. 시작한다.');
+    첫말('들어왔습니다. 시작합니다.');
     setTimeout(()=>{ if($('#목록열쇠칸')){ 목록(); 위로(); } else 안내봤다(); }, 700);
   };
   s.onerror=()=>{ clearTimeout(시계); 치우기();
-    첫말('지금은 서버에 못 닿았다. 잠시 뒤 다시.', true); 들일까(k); };
+    첫말('지금은 서버에 못 닿았습니다. 잠시 뒤 다시 해 주세요.', true); 들일까(k); };
   s.src=서버+(서버.indexOf('?')<0?'?':'&')
         +'do=join&cb='+이름+'&key='+encodeURIComponent(k)
         +'&who='+encodeURIComponent(내이름||'');
@@ -442,7 +443,7 @@ function 들이기(){
 function 열쇠맞나(목록에서){
   const 끝내기 = 목록에서 ? (()=>{ 목록(); 위로(); }) : 안내봤다;
   const k=(첫열쇠||내열쇠||'').trim();
-  if(!k){ 첫말('열쇠를 안 적으면 이 기기에만 남는다. 그래도 괜찮으면 아래를 눌러라.'); return; }
+  if(!k){ 첫말('열쇠를 안 적으면 기록이 이 기기에만 남습니다. 그래도 괜찮으면 아래를 누르세요.'); return; }
   첫말('확인하는 중…');
   const 이름='lrchk'+(++부름번호);
   const s=document.createElement('script');
@@ -451,7 +452,7 @@ function 열쇠맞나(목록에서){
   const 시계=setTimeout(()=>{ 치우기();
     // 서버에 못 닿는 것과 열쇠가 틀린 것은 다르다. 못 닿았으면 **막지 않는다** —
     // 열쇠는 맞는데 지금 인터넷이 나쁜 것일 수 있고, 그때 학생을 세우면 안 된다.
-    열쇠적기(k); 첫말('지금은 서버에 못 닿았다. 그냥 시작한다 — 나중에 저절로 이어진다.');
+    열쇠적기(k); 첫말('지금은 서버에 못 닿았습니다. 그냥 시작합니다 — 나중에 저절로 이어집니다.');
     setTimeout(끝내기, 1600); }, 12000);
   window[이름]=(d)=>{
     clearTimeout(시계); 치우기();
@@ -459,15 +460,15 @@ function 열쇠맞나(목록에서){
       // 없는 이름이라고 그냥 막으면 **처음 오는 학생이 못 들어온다.**
       // 선생님이 미리 등재해 주기를 기다려야 하는데, 그 사이 학생은 기록이
       // 안 이어지는 채로 푼다. 그러니 **그 자리에서 들어오게** 한다.
-      첫말('처음 보는 이름이다. 이 이름으로 시작할까?');
+      첫말('「'+k+'」— 명단에 없는 이름입니다. 선생님께 받은 것과 한 글자라도 다르면 기록이 따로 쌓입니다. 먼저 다시 보십시오.');
       들일까(k); return;
     }
     열쇠적기(k);
-    첫말('이어졌다. 시작한다.');
+    첫말('이어졌습니다. 시작합니다.');
     setTimeout(끝내기, 700);
   };
   s.onerror=()=>{ clearTimeout(시계); 치우기();
-    열쇠적기(k); 첫말('지금은 서버에 못 닿았다. 그냥 시작한다.');
+    열쇠적기(k); 첫말('지금은 서버에 못 닿았습니다. 그냥 시작합니다.');
     setTimeout(끝내기, 1600); };
   s.src=서버+(서버.indexOf('?')<0?'?':'&')
         +'do=get&cb='+이름+'&key='+encodeURIComponent(k);
