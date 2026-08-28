@@ -403,11 +403,25 @@ let 들일열쇠='';
 function 들일까(k){
   들일열쇠=k;
   const t=$('#첫열쇠말'); if(!t) return;
+  // ⚠️ **먼저 있던 것을 지우고 넣는다.** 예전에는 `insertAdjacentHTML` 로 덧붙이기만
+  //    해서, 「시작하기」를 다시 누를 때마다 칸이 하나씩 쌓였다(눌러 본 실측: 5번에
+  //    +520px · 파란 단추 6개 · 같은 id 5개). 게다가 `들이기()` 는 화면이 아니라
+  //    `들일열쇠` 를 읽으므로 **단추에 적힌 이름과 실제로 들어가는 이름이 달라졌다** —
+  //    `가가가 로 시작하기` 를 눌렀는데 `나나나` 가 명단에 올라간다.
+  //    (lead-dev·lead-design 이 서로 모르는 채 같이 짚었다, 2026-08-28)
+  document.querySelectorAll('#들이기칸').forEach(x=>x.remove());
+  // ⚠️ 「다시 적기」를 `.go` 로 두면 아래 「시작하기」와 **폭·높이·색이 한 픽셀도
+  //    안 달라** 손이 방금 누른 자리로 다시 간다. 하는 일도 이쪽이 더 작다
+  //    (칸을 비워 줄 뿐, 실제로 들어가는 것은 아래 「시작하기」다).
+  //    그래서 **작은 글로 내리고** 파란 단추는 하나만 남긴다.
   t.insertAdjacentHTML('afterend',
-    `<div id="들이기칸" style="margin-top:8px">
-       <button class="go" onclick="첫말('');$('#들이기칸').remove();
-         (document.querySelector('#첫열쇠칸')||{focus(){}}).focus()">다시 적기</button>
-       <a class="more" onclick="들이기()">아니다, 이 이름이 맞다 — 그대로 시작</a>
+    `<div id="들이기칸" style="margin-top:6px">
+       <a class="more" onclick="첫말('');document.querySelectorAll('#들이기칸')
+         .forEach(x=>x.remove());(document.querySelector('#첫열쇠칸')
+         ||document.querySelector('#목록열쇠칸')||{focus(){}}).focus()"
+         >고쳐 적겠습니다</a>
+       <a class="more" style="margin-left:12px" onclick="들이기()"
+         >아니다, 이 이름이 맞다 — 그대로 시작</a>
      </div>`);
 }
 function 들이기(){
@@ -682,7 +696,7 @@ const 첫걸음자리=첫걸음.map(id=>DATA.findIndex(q=>q.id===id)).filter(i=>
 function 첫걸음칸(){
   if(!첫걸음자리.length||고른유형!=='전체') return '';
   return `<div class="first"><div class="lab">처음이라면 여기부터</div>
-    <div class="sub">짧고 쉬운 것 ${첫걸음자리.length}개다. 먼저 도구에 익숙해지자.</div>
+    <div class="sub">짧고 쉬운 것 ${첫걸음자리.length}개입니다. 먼저 도구에 익숙해지세요.</div>
     ${첫걸음자리.map(i=>`<button class="item" onclick="열기(${i})">
       <div class="t">${esc(DATA[i].출처짧게)} <span class="dim">·</span> ${esc(DATA[i].유형)}
         ${DATA[i].등급?`<span class="lv" style="color:${등급색[DATA[i].등급]||'#7a7f88'}">난이도 ${esc(DATA[i].등급)}</span>`:''}</div>
@@ -782,10 +796,11 @@ function 목록(){
    // 열쇠 없이 시작한 학생은 안내를 다시 안 본다. 그러면 **기록이 이 기기에만
    // 쌓이는 줄 모른 채** 몇 주가 간다. 목록 맨 위에 한 줄로 남겨 둔다.
    +((서버&&!내열쇠)?`<div class="card" style="padding:12px 14px;margin-bottom:12px">
-      <b>열쇠를 아직 안 적었다</b>
-      <div class="note" style="border:0;padding:4px 0 8px">지금은 기록이
-        <b>이 기기에만</b> 남는다. 선생님께 받은 열쇠를 적으면 폰·노트북·패드가
-        같은 기록으로 이어진다.</div>
+      <b>열쇠를 아직 안 적었습니다</b>
+      <div class="note" style="border:0;padding:4px 0 8px">지금 기록은 이 브라우저
+        안에만 있습니다. 저장 공간을 비우거나 비공개 모드로 열면 <b>되돌릴 길이
+        없습니다.</b> 선생님께 받은 열쇠를 적으면 서버에도 남고, 폰·노트북·패드가
+        같은 기록으로 이어집니다.</div>
       <input class="ta" id="목록열쇠칸" placeholder="예: 홍길동"
         style="height:auto;padding:11px 12px" oninput="첫열쇠침(this.value)"
         onkeydown="if(event.key==='Enter')목록열쇠()">
@@ -1238,6 +1253,14 @@ function 열쇠적기(v){
   try{ localStorage.setItem('논리독해_열쇠', 내열쇠); }catch(e){ 저장못했다(); }
   열쇠확인됨=false; 쓸수없음=false;    // 새 열쇠는 아직 아무것도 확인 안 됐다
   이음상태 = 내열쇠?'아직':'열쇠없음';
+  // ⚠️ 열쇠가 바뀌면 **앞 열쇠에 대한 말은 다 거짓이 된다.**
+  //    · 알림: 「홍길둥은 명단에 없다」가 칸을 비워도 영영 남아 있었다.
+  //      지우는 자리가 `받아오기` 성공 경로 하나뿐인데, 빈 열쇠는 그 길을 안 탄다.
+  //    · 이음 글: `이음상태` 만 바꾸고 `이음그리기()` 를 안 불러
+  //      「이어져 있다」가 그대로 남았다. 평소엔 뒤이어 도는 `받아오기` 가 칠해
+  //      줘서 안 드러나다가, 열쇠가 비면 그 길이 끊긴다. (lead-dev, 2026-08-28)
+  알림지우기('명단');
+  이음그리기();
   if(내열쇠) 받아오기(true);
 }
 
@@ -1322,10 +1345,10 @@ function 받아오기(알릴까){
       쓸수없음=true; 열쇠확인됨=false;
       이음상태='못쓴다'; 이음그리기();
       if(알릴까){
-        알림('「'+내열쇠+'」는 명단에 없는 이름이다. 오타가 아닌지 보십시오. '
-            +'맞는 이름이라면 첫 화면에서 이 이름으로 시작하면 자리를 잡고, '
-            +'선생님이 명단에 넣어 주셨다면 「지금 가져오기」를 누르면 이어진다. '
-            +'그때까지 기록은 이 기기에만 남고 다른 기기로는 안 넘어간다.', '명단');
+        알림('「'+내열쇠+'」— 명단에 없는 이름입니다. 오타가 아닌지 보십시오. '
+            +'맞는 이름이라면 그대로 시작하면 자리를 잡고, 선생님이 명단에 넣어 '
+            +'주셨다면 「지금 가져오기」를 누르면 이어집니다. 그때까지 기록은 '
+            +'이 기기에만 남습니다.', '명단');
         들일까(내열쇠);              // 안내 화면이면 그 자리에서 들어오게 한다
       }
       return;                       // 합치지도, 올리지도 않는다
