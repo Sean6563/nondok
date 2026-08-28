@@ -1184,7 +1184,20 @@ function 알림(글, 갈래){
   //    「내 기록 · 선생님께 보내기」 단추를 덮고 있었다 — 하필 알림이
   //    「열쇠를 적으면 서버에 남는다」고 말하면서 그 열쇠칸으로 가는 유일한
   //    단추를 가렸다. 알림이 떠 있는 동안 본문 아래에 자리를 내준다.
-  document.body.style.paddingBottom=(el.offsetHeight+18)+'px';
+  //
+  // ⚠️⚠️ **여백만 넣으면 모자란다.** 학생이 이미 맨 아래에 있으면 새로 난
+  //    여백은 발밑이 아니라 **화면 밖 아래**에 생기고, 알림은 그대로 마지막
+  //    단추 위에 앉는다. 그리고 블록 화면에서 학생은 **늘 맨 아래에 있다** —
+  //    동선 다섯을 고르려면 내려야 하고, 내리면 바닥이다. 매번.
+  //    그래서 **여백만큼 스크롤도 같이 내린다.** 그러면 알림 높이가 얼마든,
+  //    화면이 얼마나 작든 겹치지 않는다 — 여유 몇 px 에 기대지 않는다.
+  //    (lead-design 이 「74% 덮인다」고 짚었고 내 재현은 여유가 4px 이었다.
+  //     둘 중 누가 맞는지를 재는 대신 **그 다툼 자체가 없어지게** 고쳤다)
+  const 옛여백=parseFloat(document.body.style.paddingBottom)||0;
+  const 새여백=el.offsetHeight+18;
+  document.body.style.paddingBottom=새여백+'px';
+  const 바닥이었나 = (scrollY + innerHeight) >= (document.body.scrollHeight - 새여백 + 옛여백 - 4);
+  if(바닥이었나) scrollBy(0, 새여백-옛여백);
 }
 function 알림닫기(){
   const el=$('#알림'); if(el) el.remove();
