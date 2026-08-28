@@ -8,7 +8,16 @@ h1{font-size:19px;margin:0 0 16px}
 /* 문항 화면은 390px 에서 대조가 5,000px 을 넘는다(실측). 돌아갈 자리가 맨 아래에만
    있으면 목록으로 가려고 다섯 화면을 쓸어내려야 한다 — 머리줄을 붙여 둔다.
    가장자리 여백까지 덮어야 본문이 옆으로 비쳐 지나가지 않는다. */
-.meta{font-size:12px;color:#7a7f88;display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+/* ── 작은 글씨 색 — AA(4.5) 를 넘긴다 ─────────────────────────────────
+   소유주가 이미 한 자리를 그 이유로 고치셨다 — 「3.82 라 AA 에 못 미쳤다.
+   20분 넘게 보는 화면이다, 진하게」. 그런데 **색 자체는 그대로**라 나머지
+   열두 자리가 남아 있었다(lead-design 실측).
+     #7a7f88  흰 카드 4.02 · 페이지 바탕 3.53   ← 둘 다 미달
+     #686d76  흰 카드 5.20 · 페이지 바탕 4.56   ← AA 를 넘는 **가장 옅은** 색
+   결(+5,+14)을 지켜 골랐다 — 「조용한 글씨」라는 성격을 안 바꾸려고.
+   `.why`(오답이 왜 오답인지, 251자)는 틀린 선지의 붉은 바탕 위에서 4.40 이라
+   `#886861` 로 옮겼다. **이 앱의 마지막 단계가 가장 흐린 글씨였다.** */
+.meta{font-size:12px;color:#686d76;display:flex;gap:8px;align-items:center;flex-wrap:wrap;
   position:sticky;top:0;z-index:5;background:#eef0f4;margin:0 -16px 10px;padding:6px 16px}
 .meta .back{border:1px solid #d8dce4;background:#fff;color:#5c626d;border-radius:8px;
   padding:13px 12px;font:inherit;font-size:12px;line-height:1;cursor:pointer}
@@ -23,7 +32,7 @@ h1{font-size:19px;margin:0 0 16px}
   margin-bottom:9px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.07);font:inherit}
 .item:hover{background:#fbfcfe}
 .item .t{font-weight:600;font-size:15px}
-.item .s{font-size:12px;color:#7a7f88;margin-top:3px}
+.item .s{font-size:12px;color:#686d76;margin-top:3px}
 /* 붙여넣기는 **뒷문이 아니다** (2026-08-27 소유주 판단). 「기출 5개년은 꼭 다
    풀어라」가 학생에게 준 지시라, 궁금한 지문을 들고 찾아 들어오는 일이 드물지
    않다. 그래서 문항 카드와 같은 크기로 두되 점선으로 「이건 목록이 아니라
@@ -37,7 +46,7 @@ h1{font-size:19px;margin:0 0 16px}
 .blk.now{border-left-color:#4a72c4}
 .blk .txt{white-space:pre-wrap;overflow-wrap:break-word;overflow-wrap:anywhere}
 .blk .txt u{text-decoration:underline;text-underline-offset:3px}
-.blk .nm{font-size:12px;color:#7a7f88;margin-bottom:4px}
+.blk .nm{font-size:12px;color:#686d76;margin-bottom:4px}
 .hint{background:#f7f9fc;border-radius:9px;padding:10px 12px;margin-top:9px;font-size:14px;color:#3c4350}
 .hint b{color:#2f4c8a;font-weight:600;margin-right:6px}
 .opts{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
@@ -70,9 +79,9 @@ h1{font-size:19px;margin:0 0 16px}
 .ch.sel{border-color:#4a72c4;background:#eef3fc}
 .ch.right{border-color:#4a9a5c;background:#eef8f0}
 .ch.wrong{border-color:#c4756a;background:#fdf1ef}
-.ch .why{display:block;font-size:12.5px;color:#8a6a63;margin-top:4px}
+.ch .why{display:block;font-size:12.5px;color:#886861;margin-top:4px}
 .ch.right .why{color:#3d7a48}
-.why2{color:#8a6a63}
+.why2{color:#886861}
 .more{text-decoration:underline;cursor:pointer;margin-left:3px;color:#7b8391}
 /* 흐르는 글 안의 「왜?」는 줄을 밀지 않아야 하므로 여백 대신 **손가락 자리만** 넓힌다.
    제 줄에 혼자 선 것들(접기·사용법 다시 보기·내 기록 보기)은 22×15px 이라
@@ -80,7 +89,7 @@ h1{font-size:19px;margin:0 0 16px}
 .more{padding:9px 4px;margin:-9px -1px}
 .dh .more,.warn .more,.first .more{display:inline-block;padding:8px 12px;margin:7px 0 0;
   border:1px solid #dfe3e9;border-radius:8px;background:#fff;text-decoration:none;color:#5c626d}
-.fold{display:block;margin-top:3px;color:#8a6a63}
+.fold{display:block;margin-top:3px;color:#886861}
 button.go{width:100%;padding:13px;border:0;border-radius:11px;background:#2f4c8a;color:#fff;font:inherit;
   font-size:16px;font-weight:600;cursor:pointer;margin-top:14px}
 /* 못 누르는 동안에는 **물러선다.** 예전에는 회색이어도 338×54 짜리 꽉 찬 덩어리라
@@ -133,7 +142,7 @@ button.ghost.more2{display:block;width:100%;margin:12px 0 0;padding:13px;backgro
 .say .lab{font-size:11px;color:#3e6094;font-weight:700;margin-bottom:5px}
 .trap{background:#fffaf3;border:1px solid #f0e4cf;border-radius:9px;padding:12px 14px;margin-top:12px;font-size:14px}
 .trap b{color:#8a6d1a}
-.prog{font-size:12px;color:#7a7f88;text-align:right}
+.prog{font-size:12px;color:#686d76;text-align:right}
 .split{background:#fbfcfd;border:1px solid #e6e9ee;border-radius:9px;padding:11px 13px;margin-top:10px}
 .split .ask{font-size:13px;color:#5c626d;margin-bottom:8px}
 .opt.sm{font-size:13px;padding:6px 11px}
@@ -144,7 +153,7 @@ button.ghost.more2{display:block;width:100%;margin:12px 0 0;padding:13px;backgro
 .split .opt.sm{min-height:44px;padding:9px 13px}
 .sent{background:#f1f8f2;border:1px solid #bcd9c0;border-radius:9px;padding:10px 12px;margin-top:10px;
   font-size:13px;color:#3d7a48}
-.warn{font-size:12.5px;color:#7a7f88;background:#fafbfc;border:1px solid #e8eaee;border-radius:9px;
+.warn{font-size:12.5px;color:#686d76;background:#fafbfc;border:1px solid #e8eaee;border-radius:9px;
   padding:10px 12px;margin-bottom:12px}
 /* 화면과 상관없이 뜨는 알림. **기록을 잃을 수도 있다**는 말만 여기로 온다 —
    그래서 저절로 안 사라지고, 학생이 눌러 닫아야 간다. 위에서 내려오게 두면
@@ -177,7 +186,7 @@ span.mk{cursor:default}
 /* 각주 — 시험지처럼 본문에서 한 줄 띄워 작게 */
 .par{margin-top:12px;white-space:pre-wrap;overflow-wrap:break-word;overflow-wrap:anywhere}
 .par b{color:#2f4c8a;margin-right:4px}
-.fn{margin-top:14px;padding-top:10px;border-top:1px solid #eef0f3;font-size:13px;color:#7a7f88}
+.fn{margin-top:14px;padding-top:10px;border-top:1px solid #eef0f3;font-size:13px;color:#686d76}
 .passage u{text-decoration:underline;text-underline-offset:3px}
 /* 붙여넣기·모아보기 칸. 인라인 style 로 두면 아래 미디어쿼리가 못 이긴다
    (인라인이 스타일시트를 이긴다) — iOS 는 16px 미만 입력칸을 누르면 화면을 확대해
@@ -208,7 +217,7 @@ span.mk{cursor:default}
 .ex .tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:9px;
   border:1px solid #cdd8e8;background:#fff;color:#2f4c8a;margin-right:5px;white-space:nowrap}
 /* 5택1 바로 옆의 한 줄 도움말 */
-.dh{margin-top:9px;font-size:12.5px;color:#7a7f88;line-height:1.65}
+.dh{margin-top:9px;font-size:12.5px;color:#686d76;line-height:1.65}
 .dh .row{display:flex;gap:7px;margin-top:2px}
 .dh .k{flex:0 0 46px;font-weight:600;color:#5c626d}
 .dh .v{flex:1;min-width:0}
@@ -222,13 +231,13 @@ span.mk{cursor:default}
    저것이구나」가 눈으로 이어진다. 해설 카드들 사이에서 튀지 않게 옅게 둔다 —
    이건 답도 근거도 아니고 **이름표**다. */
 .kin{background:#f9fafc;border:1px solid #e6e9ee;box-shadow:none;font-size:14.5px}
-.kin .lab{font-size:11px;color:#7a7f88;font-weight:600;margin-bottom:4px}
+.kin .lab{font-size:11px;color:#686d76;font-weight:600;margin-bottom:4px}
 .kin b{color:#2f4c8a}
 .kin .note b{color:#16181d}
 /* 푼 문항 — 지우지 않고 **가라앉힌다.** 다시 풀 수 있어야 하고(동선은 두 번째가
    더 정확하다), 목록에서 없애면 어제 뭘 풀었는지 확인할 길이 사라진다. */
 .item.done{background:#fafbfc}
-.item.done .t{color:#7a7f88;font-weight:500}
+.item.done .t{color:#686d76;font-weight:500}
 .badge.done{border-color:#c9d6e8;background:#f2f6fc;color:#4a6ba8}
 
 /* ── 좁은 화면 ──────────────────────────────────────────────────────────
@@ -286,6 +295,10 @@ const 동선줄들=동선들.map(d=>`<div class="row"><div class="k">${아이콘
 // 한 번 보면 안 뜬다. 다시 보려면 목록 위 「사용법」.
 // 키를 `논리독해_의견` 과 따로 둔다 — 의견은 선생님께 보낼 자료라 지우면 안 되고,
 // 이건 그냥 봤다는 표시다.
+// 지금 어느 화면인가. **표를 짐작하지 않는다** — `$('#app')` 는 늘 참이고
+// `#찾기칸` 같은 것은 조건부라 언젠가 어긋난다. 화면이 스스로 이름을 남긴다.
+// ⚠️ 쓰는 자리(`안내()` 795줄)보다 **앞**에 둔다. `let` 은 안 끌어올려진다.
+let 지금화면='';
 const 안내키='논리독해_안내봄';
 function 안내봤다(){ try{ localStorage.setItem(안내키,'1'); }catch(e){} 목록(); }
 
@@ -294,6 +307,7 @@ function 안내(){
   // 문장은 왜 skip 인가"가 안 잡힌다. 앞의 것은 한 지문 안에서 skim·정독·skip 이
   // 갈리는 자리를 나란히 보여 주고(길이가 아니라 역할이 동선을 정한다),
   // 뒤의 것은 `추적`이 글자를 안 읽는 게 아님을 보여 준다.
+  지금화면='안내';
   $('#app').innerHTML=`<h1>논리독해 연습</h1>
    <div class="card gd">
      <div class="lead">오랜만입니다. 수업에서 하던 논리독해를 혼자서도 연습할 수
@@ -514,6 +528,7 @@ function 지문표(){ if(!지문조각) 지문조각=DATA.map(q=>조각화(낱�
   q.지문+' '+(q.선지||[]).map(c=>c.글).join(' ')))); return 지문조각; }
 
 function 붙여넣기(){
+  지금화면='넣기';
   $('#app').innerHTML=`<h1>지문 넣기</h1>
    <div class="warn">풀고 싶은 지문을 붙여넣으세요. 우리가 가진 지문이면 바로 열리고,
      없으면 <b>선생님이 확인한 뒤 내일 아침에</b> 열립니다.</div>
@@ -699,7 +714,7 @@ function 첫걸음칸(){
     <div class="sub">짧고 쉬운 것 ${첫걸음자리.length}개입니다. 먼저 도구에 익숙해지세요.</div>
     ${첫걸음자리.map(i=>`<button class="item" onclick="열기(${i})">
       <div class="t">${esc(DATA[i].출처짧게)} <span class="dim">·</span> ${esc(DATA[i].유형)}
-        ${DATA[i].등급?`<span class="lv" style="color:${등급색[DATA[i].등급]||'#7a7f88'}">난이도 ${esc(DATA[i].등급)}</span>`:''}</div>
+        ${DATA[i].등급?`<span class="lv" style="color:${등급색[DATA[i].등급]||'#686d76'}">난이도 ${esc(DATA[i].등급)}</span>`:''}</div>
       <div class="s">${DATA[i].블록.length}블록 · ${esc(DATA[i].발문)}</div></button>`).join('')}</div>`;
 }
 
@@ -718,7 +733,7 @@ function 이어서칸(줄){
     ${다음?`<div class="sub">여기서 이어서 풀면 된다.</div>
       <button class="item" onclick="열기(${다음.i})">
         <div class="t">${esc(다음.q.출처짧게)} <span class="dim">·</span> ${esc(다음.q.유형)}
-          ${다음.q.등급?`<span class="lv" style="color:${등급색[다음.q.등급]||'#7a7f88'}">난이도 ${esc(다음.q.등급)}</span>`:''}</div>
+          ${다음.q.등급?`<span class="lv" style="color:${등급색[다음.q.등급]||'#686d76'}">난이도 ${esc(다음.q.등급)}</span>`:''}</div>
         <div class="s">${다음.q.블록.length}블록 · ${esc(다음.q.발문)}</div></button>`
       :'<div class="sub">이 목록은 다 풀었다.</div>'}
     <a class="more" onclick="모아보기()">내 기록 보기</a></div>`;
@@ -767,13 +782,14 @@ function 목록(){
     return 머리+`<button class="item${진도[q.id]?' done':''}" onclick="열기(${i})">
      <div class="t">${esc(q.출처짧게)}
        <span class="dim">·</span> ${esc(q.유형)}
-       ${q.등급?`<span class="lv" style="color:${등급색[q.등급]||'#7a7f88'}">난이도 ${esc(q.등급)}</span>`:''}</div>
+       ${q.등급?`<span class="lv" style="color:${등급색[q.등급]||'#686d76'}">난이도 ${esc(q.등급)}</span>`:''}</div>
      <div class="s">${esc(q.발문)}</div>
      <div class="s">${q.블록.length}블록
        ${q.검수==='전수'||q.검수==='부분'?'<span class="badge ok">✓ 선생님 확인</span>':''}
        ${q.강의?'<span class="badge lec">📼 강의에서 다룸</span>':''}
        ${진도표(q)}</div></button>`;
   }).join('');
+  지금화면='목록';
   $('#app').innerHTML='<h1>논리독해 연습</h1>'+
    '<div class="warn">지문을 읽고 <b>먼저 답을 고른 뒤</b>, 선생님의 읽기 동선과 대조합니다. '
    +'뒤 블록은 미리 보이지 않습니다.'
@@ -979,6 +995,7 @@ function 풀기(){
   // 지문 앞에 세운다 — 손잡이를 만나기 전에 손잡이인 줄 알아야 한다.
   const 짚어=Q.자리?'<div class="note" style="border:0;padding:0;margin:8px 0 0;color:#2f4c8a">'
     +'지문 안의 <b>①~⑤</b> 를 눌러 고르세요.</div>':'';
+  지금화면='풀기';
   $('#app').innerHTML=`<div class="meta">
     <button class="back" onclick="목록()">← 목록</button>
     <span class="badge">${esc(Q.출처짧게)}</span>
@@ -1017,6 +1034,7 @@ function 읽기(n){
   const b=Q.블록[n], 칸=힌트칸(b), h=Math.min(힌트[n],칸.length);
   const 지난=Q.블록.slice(0,n).map((x,i)=>`<div class="blk"><div class="nm">${esc(x.이름)}
       ${아이콘[내동선[i]]||''}${esc(내동선[i])}</div><div class="txt">${밑줄(esc(x.원문))}</div></div>`).join('');
+  지금화면='읽기';
   $('#app').innerHTML=`<div class="meta">
      <button class="back" onclick="목록()">← 목록</button>
      <span class="badge">${esc(Q.출처)}</span>
@@ -1096,6 +1114,7 @@ function 마무리(){
         <a class="more" onclick="펴기(event,'${키}')">왜?</a>
         <span class="fold hide" id="fold_${키}">${굵게(esc(원리))}</span></span>`;
   }
+  지금화면='대조';
   $('#app').innerHTML=`<div class="meta">
       <button class="back" onclick="목록()">← 목록</button>
       <span class="badge">${esc(Q.출처)}</span>
@@ -1382,8 +1401,13 @@ function 받아오기(알릴까){
     //   서로 반대말을 한다 — 아래엔 「명단에 없는 이름이다」, 위엔 「이어져 있다」.
     알림지우기('명단');
     이음상태='받았다'; 이음그리기();
-    if(알릴까) 쪽지(더한?`다른 기기에서 푼 ${더한}건을 가져왔다`:'가져올 새 기록이 없다');
-    if(더한 && $('#app') && !Q) 목록();
+    if(알릴까) 쪽지(더한?`다른 기기에서 푼 ${더한}건을 가져왔습니다`:'가져올 새 기록이 없습니다');
+    // ⚠️ `$('#app')` 는 **늘 참**이라 주석이 말하던 「목록이 열려 있으면 다시
+    //    그린다」를 못 지켰다. 그래서 「내 기록」 화면에서 열쇠를 치는 중에
+    //    합칠 것이 하나라도 오면 **타자 치던 화면이 목록으로 바뀌고 열쇠칸이
+    //    사라졌다.** 열쇠칸이 `oninput` 이라 글자마다 도는 것과 겹친다.
+    //    (lead-dev F5, 2026-08-28). **지금 목록 화면일 때만** 다시 그린다.
+    if(더한 && !Q && 지금화면==='목록') 목록();
     보내기();                       // 합친 결과를 서버에도 올려 둔다
   };
   s.onerror=()=>{ clearTimeout(시계); 치우기();
@@ -1460,6 +1484,7 @@ function 모아보기(){
   const 푼것=Object.values(진도);
   const 동선합=푼것.reduce((s,p)=>s+(p.동선맞은수||0),0);
   const 블록합=푼것.reduce((s,p)=>s+(p.블록수||0),0);
+  지금화면='기록';
   $('#app').innerHTML=`<h1>내 기록</h1>
     <div id="쪽지"></div>
     <div class="card"><b>어디까지 했나</b>
