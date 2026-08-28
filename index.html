@@ -300,6 +300,12 @@ const 동선줄들=동선들.map(d=>`<div class="row"><div class="k">${아이콘
 // ⚠️ 쓰는 자리(`안내()` 795줄)보다 **앞**에 둔다. `let` 은 안 끌어올려진다.
 let 지금화면='';
 const 안내키='논리독해_안내봄';
+function 예펴기(a){
+  const el=$('#동선예'); if(!el) return;
+  const 폈나=!el.classList.contains('hide');
+  el.classList.toggle('hide');
+  a.textContent = 폈나 ? '지문에서 어떻게 갈리는지 예로 보기 ▾' : '예 접기 ▴';
+}
 function 안내봤다(){ try{ localStorage.setItem(안내키,'1'); }catch(e){} 목록(); }
 
 function 안내(){
@@ -338,6 +344,13 @@ function 안내(){
        이 문장이 <b>내가 아는 것을 바꾸느냐</b>예요. 그것만 보고 고르면 됩니다.</div>
      <div class="dl" style="margin-top:10px">${동선줄들}</div>
 
+     <!-- ⚠️ 예제 둘이 이 카드의 대부분이다 — 첫 화면 2,699px 중 이 카드가
+          1,194px(44%)이고 그 안의 영문 307자가 여기 다 있다(실측).
+          **없애지 않는다.** 다섯 낱말은 수업에서 쓰던 말이라 흐릿한 학생에겐
+          꼭 필요하다. 다만 **아는 학생이 건너뛸 길이 없었다.**
+          접어 두고 여는 단추를 둔다 — 아는 사람은 바로 열쇠칸에 닿는다. -->
+     <a class="more" onclick="예펴기(this)">지문에서 어떻게 갈리는지 예로 보기 ▾</a>
+     <div id="동선예" class="hide">
      <div class="ex">
        <div class="src">2015 수능 · 도덕 원칙에 관한 글 — 같은 지문의 세 문장</div>
        <div class="en">When a person accepts a moral principle, naturally the person
@@ -367,6 +380,7 @@ function 안내(){
          <b>④ 다음 문장에서 처음으로 bits of skin 이 나옵니다</b> → 답은 ⑤.</div>
        <div>문장 뜻을 다 새기지 않았습니다. <em>찾는 것 하나가 나왔나</em>만 보며
          지났어요. 이게 추적입니다.</div>
+     </div>
      </div>
    </div>
    <div class="card gd">
@@ -730,7 +744,7 @@ function 이어서칸(줄){
   return `<div class="first">
     <div class="lab">${푼수}건 풀었다 <span class="sub" style="font-weight:400">/ 전체 ${DATA.length}건</span></div>
     ${고른유형!=='전체'?`<div class="sub">${esc(고른유형)} ${이곳} / ${줄.length}건</div>`:''}
-    ${다음?`<div class="sub">여기서 이어서 풀면 된다.</div>
+    ${다음?`<div class="sub">여기서 이어서 풀면 됩니다.</div>
       <button class="item" onclick="열기(${다음.i})">
         <div class="t">${esc(다음.q.출처짧게)} <span class="dim">·</span> ${esc(다음.q.유형)}
           ${다음.q.등급?`<span class="lv" style="color:${등급색[다음.q.등급]||'#686d76'}">난이도 ${esc(다음.q.등급)}</span>`:''}</div>
@@ -880,7 +894,7 @@ function 목록(){
    +(줄.length>볼것.length
       ? `<button class="ghost more2" onclick="더보기()">${Math.min(한번에(),줄.length-볼것.length)}건 더 보기
            <span style="color:#9aa0aa">— ${볼것.length} / ${줄.length}</span></button>`
-      : (줄.length>한번에()?'<div class="note" style="text-align:center;border:0">여기가 끝이다.</div>':''));
+      : (줄.length>한번에()?'<div class="note" style="text-align:center;border:0">여기가 끝입니다.</div>':''));
 }
 
 // ── 진도 ────────────────────────────────────────────────────────────────
@@ -1008,6 +1022,11 @@ function 풀기(){
      ${Q.자리?''   /* 같은 말이 지문 위로 갔다 — 여기 또 두면 두 번 읽힌다 */
        :Q.선지.map(c=>`<button class="ch" data-l="${esc(c.표)}" onclick="고르기(this)">
           ${esc(c.표)} ${esc(c.글)}</button>`).join('')}
+     <!-- ⚠️ 이 단추 글들은 학생 자신의 말이라 높임말로 안 옮긴다.
+          「답을 정했다」·「여기까지 읽었다」·「다 읽었다」는 앱이 학생에게 하는
+          말이 아니라 학생이 눌러서 선언하는 말이다. 동선 라벨을 짧게 둔 것과
+          같은 갈래다. 선생님이 학생에게 하는 말(안내·알림·갈래줄)만 높임말이다.
+          ⚠️ 이 주석은 템플릿 문자열 **안**이다 — 백틱을 쓰면 문자열이 끊긴다. -->
      <button class="go" id="next" disabled onclick="단계=1;그리기()">답을 정했다 — 읽는 법 보기</button></div>
    <button class="ghost" onclick="목록()">← 목록</button>`;
 }
@@ -1078,18 +1097,18 @@ function 힌트더(n){ 힌트[n]=힌트[n]+1; 읽기(n); }
 function 갈래줄(){
   if(!Q.갈래) return '';
   const 같은것=DATA.filter(x=>x.갈래===Q.갈래&&x.유형===Q.유형).length;
-  return `<div class="card kin"><div class="lab">이 문제는 이런 갈래다</div>
+  return `<div class="card kin"><div class="lab">이 문제는 이런 갈래입니다</div>
     <b>「${esc(Q.갈래)}」</b>
     ${같은것>1
       ? `<div class="note" style="border:0;padding:8px 0 0">같은 갈래의 ${esc(Q.유형)}
-           <b>${같은것}건</b>이 있다. 다만 <b>몰아서 풀지는 마라</b> — 비슷한 것을
-           연달아 풀면 지문을 안 읽고도 답이 보이기 시작한다. 언제 풀지는 네가 정해라.
+           <b>${같은것}건</b>이 있습니다. 다만 <b>몰아서 풀지는 마세요</b> — 비슷한 것을
+           연달아 풀면 지문을 안 읽고도 답이 보이기 시작합니다. 언제 풀지는 직접 정하세요.
            <button class="ghost" style="display:block;margin-top:9px"
              onclick="갈래고르기('${q1(Q.갈래)}','${q1(Q.유형)}')">같은 갈래 ${같은것}건 보기</button></div>`
       // ⚠️ 「함의추론은 / 순서는」은 받침이 갈라 조사가 달라진다. 유형 이름 열둘이
       //    섞여 있으니 **조사가 붙지 않는 꼴**로 적는다 — `문항은` 은 늘 맞는다.
       : `<div class="note" style="border:0;padding:8px 0 0">같은 갈래의
-           ${esc(Q.유형)} 문항은 이것 하나뿐이다.</div>`}</div>`;
+           ${esc(Q.유형)} 문항은 이것 하나뿐입니다.</div>`}</div>`;
 }
 
 // ③ 대조 + 선지 제거
@@ -1236,14 +1255,14 @@ function 복사(고르개){
   const 글=String(t.value||'');
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(글).then(()=>쪽지('복사했다 — 선생님께 붙여넣어 보내면 된다'),
-      ()=>쪽지('복사가 막혔다. 칸을 길게 눌러 전체 선택한 뒤 복사하세요'));
+      ()=>쪽지('복사가 막혔습니다. 칸을 길게 눌러 전체 선택한 뒤 복사하세요'));
     return;
   }
   // 예전 사파리 대비. `execCommand` 는 폐기 예정이지만 아직 도는 폰이 있다.
   let 됐다=false;
   try{ t.select(); 됐다=!!(document.execCommand&&document.execCommand('copy')); }catch(e){}
   쪽지(됐다?'복사했다 — 선생님께 붙여넣어 보내면 된다'
-          :'복사가 막혔다. 칸을 길게 눌러 전체 선택한 뒤 복사하세요');
+          :'복사가 막혔습니다. 칸을 길게 눌러 전체 선택한 뒤 복사하세요');
 }
 
 // ── 이름 ────────────────────────────────────────────────────────────────
@@ -1446,14 +1465,14 @@ function 내려받기(){
     쪽지('내려받았다. 이 파일을 지우지 말고 두면 나중에 되살릴 수 있다');
   }catch(e){
     // 휴대폰 브라우저는 파일 내려받기를 막아 두기도 한다. 그때는 글로 가져간다.
-    쪽지('내려받기가 막혔다 — 아래 「기록 글로 복사」를 쓰세요');
+    쪽지('내려받기가 막혔습니다 — 아래 「기록 글로 복사」를 쓰세요');
   }
 }
 function 되살리기(){
   const t=$('#되살릴것'); if(!t) return;
   let d;
   try{ d=JSON.parse(String(t.value||'')); }
-  catch(e){ return 쪽지('읽을 수 없는 글이다. 내보낸 파일의 내용을 통째로 붙여넣어야 한다'); }
+  catch(e){ return 쪽지('읽을 수 없는 글입니다. 내보낸 파일의 내용을 통째로 붙여넣어야 합니다'); }
   if(!d||typeof d!=='object') return 쪽지('읽을 수 없는 글이다');
   // **덮어쓰지 않고 합친다.** 두 기기에서 푼 것이 있으면 둘 다 살아야 하고,
   // 잘못 불러왔을 때 지금 것을 잃는 쪽이 훨씬 나쁘다.
@@ -1480,7 +1499,7 @@ function 모아보기(){
       // `2026 수능 38번` 이 내부 번호보다 사람이 짚기에 더 정확하다.
       줄.push(`${v.출처} 블록${Number(i)+1} · ${v.블록명}\n`
         +`  내 판단 ${v.내동선} / 해설 ${v.해설동선} → ${v.판정}`);
-  const 글=줄.length?줄.join('\n\n'):'아직 표시한 것이 없다.';
+  const 글=줄.length?줄.join('\n\n'):'아직 표시한 것이 없습니다.';
   const 푼것=Object.values(진도);
   const 동선합=푼것.reduce((s,p)=>s+(p.동선맞은수||0),0);
   const 블록합=푼것.reduce((s,p)=>s+(p.블록수||0),0);
@@ -1493,15 +1512,15 @@ function 모아보기(){
         ${블록합?`읽은 ${블록합}블록 가운데 <b>${동선합}블록</b>에서 선생님과 동선이 같았다.`:''}</div></div>
     <div class="card"><b>선생님께 보낼 내용</b>
       <div class="note" style="border:0;padding:4px 0 8px">읽는 방식이 갈린 자리에
-        표시한 것들이다. 선생님이 이걸 보고 해설을 고칠지 판단한다.</div>
+        표시한 것들입니다. 선생님이 이걸 보고 해설을 고칠지 판단합니다.</div>
       ${줄.length
         // 빈 채로도 열두 줄짜리 칸과 「글 복사하기」를 세워 두면, 눌러 봐야
         // 「아직 표시한 것이 없다」 한 줄이 복사된다. 같은 말이 칸 안과 칸 밑에
         // 두 번 적혀 있기도 했다. 아무것도 없을 때는 **할 말만** 남긴다.
         ? `<textarea class="ta" id="보낼것" rows="12" readonly>${esc(글)}</textarea>
            <button class="ghost" onclick="복사('#보낼것')">글 복사하기</button>
-           <div class="note">복사해서 선생님께 보내면 된다.</div>`
-        : `<div class="note" style="border:0;padding-top:0">아직 표시한 것이 없다.
+           <div class="note">복사해서 선생님께 보내면 됩니다.</div>`
+        : `<div class="note" style="border:0;padding-top:0">아직 표시한 것이 없습니다.
              대조 화면에서 동선이 갈린 자리에 <b>어느 쪽이 맞는지</b> 눌러 두면
              여기 쌓인다.</div>`}</div>
     <div class="card"><b>내 이름</b>
